@@ -16,13 +16,32 @@ function initMap() {
   });
 }
 
+function showAttraction(marLat, marLng, marTitle) {
+  var marker = new google.maps.Marker({
+    position: {lat: marLat, lng: marLng},
+    title: marTitle,
+    animation: google.maps.Animation.DROP,
+    id: 1
+
+  });
+
+  marker.setMap(map);
+}
+
 function appViewModel() {
   var self = this;
 
   self.attractions = ko.observableArray([
-    new attraction('Arbitrary place', 1, 2),
-    new attraction('Another Arbitrary Place', 3, 4)
+    new attraction("Paramount Theatre", 37.809704, -122.268197),
+    new attraction("Drake's Dealership", 37.812621, -122.266326),
+    new attraction("Burrito Express", 37.814114, -122.268600),
+    new attraction("The New Parkway Theater", 37.813787, -122.267439),
+    new attraction("The Double Standard", 37.814274, -122.268234)
   ]);
+
+  self.loadMarker = function(_attraction) { showAttraction(_attraction.lat,
+                                                           _attraction.lng,
+                                                           _attraction.name) };
 
 }
 
