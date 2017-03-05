@@ -1,4 +1,5 @@
 var map;
+var largeInfowindow;
 
 function attraction(name, category, lat, lng) {
   var self = this;
@@ -15,6 +16,8 @@ function initMap() {
     center: {lat: 37.811437, lng: -122.266787},
     zoom: 16
   });
+
+  largeInfowindow = new google.maps.InfoWindow();
 }
 
 function showAttraction(marLat, marLng, marTitle) {
@@ -26,7 +29,26 @@ function showAttraction(marLat, marLng, marTitle) {
 
   });
 
+  marker.addListener('click', function() {
+    showInfoWindow(this, largeInfowindow);
+  });
   marker.setMap(map);
+}
+
+function showInfoWindow(marker, infowindow) {
+
+
+
+  if (infowindow.marker != marker){
+
+    infowindow.marker = marker;
+    infowindow.setContent('<div>' + marker.title + '</div>');
+    infowindow.open(map, marker);
+    infowindow.addListener('closeclick', function() {
+      infowindow.marker = null;
+    });
+  }
+
 }
 
 function appViewModel() {
