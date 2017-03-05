@@ -1,8 +1,9 @@
 var map;
 
-function attraction(name, lat, lng) {
+function attraction(name, category, lat, lng) {
   var self = this;
   self.name = name;
+  self.category = category;
   self.lat = lat;
   self.lng = lng;
 
@@ -32,11 +33,11 @@ function appViewModel() {
   var self = this;
 
   self.attractions = ko.observableArray([
-    new attraction("Paramount Theatre", 37.809704, -122.268197),
-    new attraction("Drake's Dealership", 37.812621, -122.266326),
-    new attraction("Burrito Express", 37.814114, -122.268600),
-    new attraction("The New Parkway Theater", 37.813787, -122.267439),
-    new attraction("The Double Standard", 37.814274, -122.268234)
+    new attraction("Paramount Theatre", "Entertainment", 37.809704, -122.268197),
+    new attraction("Drake's Dealership", "Bar", 37.812621, -122.266326),
+    new attraction("Burrito Express", "Food", 37.814114, -122.268600),
+    new attraction("The New Parkway Theater", "Entertainment", 37.813787, -122.267439),
+    new attraction("The Double Standard", "Bar", 37.814274, -122.268234)
   ]);
 
   self.loadMarker = function(_attraction) { showAttraction(_attraction.lat,
