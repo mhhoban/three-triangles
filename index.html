@@ -18,22 +18,19 @@
 
         <div class="col-md-4">
 
+          <select data-bind="options: categoryPool,
+                             optionsText: 'name',
+                             value: selectedCategory">
+
+
+          </select>
+
           <ul data-bind="foreach: attractions">
 
             <li data-bind="text: name,
                            click: $root.loadMarker"></li>
 
           </ul>
-
-          <!-- <table>
-
-          <tbody data-bind="foreach: attractions">
-            <tr>
-              <td data-bind="text: name"></td>
-            </tr>
-          </tbody>
-
-          </table> -->
 
         </div>
 

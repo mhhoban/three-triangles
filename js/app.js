@@ -3,7 +3,6 @@ var largeInfowindow;
 var markers;
 
 function fetchFsData(FsId) {
-  // data = $.get("https://api.foursquare.com/v2/venues/4e89194b5503e6f0b702249f")
   data = $.ajax({url: "https://api.foursquare.com/v2/venues/" + FsId,
                data: {client_id:'',
                 client_secret:'',
@@ -26,8 +25,14 @@ function attraction(name, category, lat, lng, FsId) {
 
 }
 
+function venueCategory(name) {
+  var self = this;
+  self.name = name;
+}
+
 function initMap() {
-  // Constructor creates a new map - only center and zoom are required.
+  // Code adapted from GoogleMaps API Udacity Course
+  // Constructor creates a new map
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 37.811437, lng: -122.266787},
     zoom: 16
@@ -78,6 +83,21 @@ function showInfoWindow(marker, infowindow) {
 
 function appViewModel() {
   var self = this;
+
+  self.categoryPool = [
+    new venueCategory("All"),
+    new venueCategory("Entertainment"),
+    new venueCategory("Food"),
+    new venueCategory("Bars")
+  ];
+
+  self.categories = ko.observableArray();
+
+  for (i = 0; i < self.categoryPool.length; i++){
+    self.categories.push(self.categoryPool[i]);
+  }
+
+  self.selectedCategory = ko.observableArray();
 
   self.attractionPool = [
     new attraction("Paramount Theatre", "Entertainment", 37.809704, -122.268197, '49f00938f964a52029691fe3'),
