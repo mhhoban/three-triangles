@@ -1,11 +1,11 @@
 var map;
 var largeInfowindow;
-var markers;
+var markers = [];
 
 function fetchFsData(FsId) {
   data = $.ajax({url: "https://api.foursquare.com/v2/venues/" + FsId,
-               data: {client_id:'',
-                client_secret:'',
+               data: {client_id:'I0T4VBKSDZU5F1HYLGWH1OTTWAYSZHHNO0SZJQK04BFFJHDD',
+                client_secret:'0N5F3IQXHCBDVSOGK5T3CWYFKQ0TCV5QJX4VESVHJ5NLVDFH',
                 v:20170101},
                 success: function(result) {
                   console.log('Query complete');
@@ -39,6 +39,12 @@ function initMap() {
   });
 
   largeInfowindow = new google.maps.InfoWindow();
+}
+
+function clearMap() {
+  for (i = 0; i < markers.length; i++){
+    markers[i].setMap(null);
+  }
 }
 
 function showAttraction(venueData) {
@@ -88,7 +94,7 @@ function appViewModel() {
     new venueCategory("All"),
     new venueCategory("Entertainment"),
     new venueCategory("Food"),
-    new venueCategory("Bars")
+    new venueCategory("Bar")
   ];
 
   self.categories = ko.observableArray();
@@ -114,8 +120,22 @@ function appViewModel() {
     fetchFsData(self.attractionPool[i].FsId);
   }
 
-  self.loadMarker = function(_attraction) {
-    fetchFsData(_attraction.FsId);
+  self.selectedCategory.subscribe(function(_selection){
+    console.log('switching');
+    console.log(_selection.name);
+    self.switchCategory(_selection.name);
+  })
+
+  self.switchCategory = function(newCategory){
+    clearMap();
+    self.attractions.removeAll();
+
+    for (i = 0; i < self.attractionPool.length; i++){
+      if (self.attractionPool[i].category == newCategory){
+        self.attractions.push(self.attractionPool[i]);
+        fetchFsData(self.attractionPool[i].FsId);
+      }
+    }
   }
 
 }
