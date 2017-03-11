@@ -1,6 +1,8 @@
 var map;
 var largeInfowindow;
 var markers = [];
+var defaultMarkIcon;
+var selectedMarkIcon;
 
 function fetchFsData(FsId) {
   data = $.ajax({url: "https://api.foursquare.com/v2/venues/" + FsId,
@@ -30,6 +32,17 @@ function venueCategory(name) {
   self.name = name;
 }
 
+function makeMarkerIcon(markerColor) {
+  var markerImage = new google.maps.MarkerImage(
+    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+    '|40|_|%E2%80%A2',
+    new google.maps.Size(21, 34),
+    new google.maps.Point(0, 0),
+    new google.maps.Point(10, 34),
+    new google.maps.Size(21,34));
+  return markerImage;
+}
+
 function initMap() {
   // Code adapted from GoogleMaps API Udacity Course
   // Constructor creates a new map
@@ -49,9 +62,13 @@ function clearMap() {
 
 function showAttraction(venueData) {
   // Code adapted from GoogleMaps API Udacity Course
+  defaultMarkIcon = makeMarkerIcon('0091ff')
+  selectedMarkIcon = makeMarkerIcon('FFFF24');
+
   var marker = new google.maps.Marker({
     position: {lat: venueData.location.lat, lng: venueData.location.lng},
     title: venueData.name,
+    icon: defaultMarkIcon,
     venueImage: venueData.bestPhoto.prefix +
                 '100' +
                 'x' +
@@ -64,6 +81,9 @@ function showAttraction(venueData) {
 
   marker.addListener('click', function() {
     showInfoWindow(this, largeInfowindow);
+  });
+  marker.addListener('mouseover', function() {
+    this.setIcon(selectedMarkIcon);
   });
   marker.setMap(map);
   markers.push(marker);
@@ -115,11 +135,6 @@ function appViewModel() {
 
   self.attractions = ko.observableArray();
 
-  for (i = 0; i < self.attractionPool.length; i++){
-    self.attractions.push(self.attractionPool[i]);
-    fetchFsData(self.attractionPool[i].FsId);
-  }
-
   self.selectedCategory.subscribe(function(_selection){
     console.log('switching');
     console.log(_selection.name);
@@ -127,15 +142,28 @@ function appViewModel() {
   })
 
   self.switchCategory = function(newCategory){
+    console.log('switchCategory func engaged');
     clearMap();
     self.attractions.removeAll();
 
-    for (i = 0; i < self.attractionPool.length; i++){
-      if (self.attractionPool[i].category == newCategory){
+    if (newCategory == 'All'){
+      for (i = 0; i < self.attractionPool.length; i++){
         self.attractions.push(self.attractionPool[i]);
         fetchFsData(self.attractionPool[i].FsId);
       }
     }
+
+    else{
+
+      for (i = 0; i < self.attractionPool.length; i++){
+        if (self.attractionPool[i].category == newCategory){
+          self.attractions.push(self.attractionPool[i]);
+          fetchFsData(self.attractionPool[i].FsId);
+        }
+      }
+    }
+
+
   }
 
 }
