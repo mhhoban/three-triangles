@@ -3,6 +3,7 @@ var largeInfowindow;
 var markers = [];
 var defaultMarkIcon;
 var selectedMarkIcon;
+var bounds;
 
 function fetchFsData(FsId) {
   // Timeout erroring adapted from http://stackoverflow.com/questions/17156332/jquery-ajax-how-to-handle-timeouts-best
@@ -53,9 +54,10 @@ function makeMarkerIcon(markerColor) {
 
 function initMap() {
   // Code adapted from GoogleMaps API Udacity Course
+  bounds = new google.maps.LatLngBounds();
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 37.811437, lng: -122.266787},
-    zoom: 16
+    zoom: 15
   });
 
   largeInfowindow = new google.maps.InfoWindow();
@@ -69,7 +71,6 @@ function clearMap() {
 
 function showAttraction(venueData) {
   // Code adapted from GoogleMaps API Udacity Course
-  var bounds = new google.maps.LatLngBounds();
 
   defaultMarkIcon = makeMarkerIcon('ff0000')
   selectedMarkIcon = makeMarkerIcon('3333ff');
