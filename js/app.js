@@ -10,10 +10,14 @@ function fetchFsData(FsId) {
                data: {client_id:'',
                 client_secret:'',
                 v:20170101},
+                timeout: 600,
                 success: function(result) {
                   console.log('Query complete');
                   console.log(result.response);
                   showAttraction(result.response.venue);
+                },
+                error: function(){
+                  alert("An error has occurred. Please try reloading the page. If the error persists, please try back again later.")
                 }
               });
 }
