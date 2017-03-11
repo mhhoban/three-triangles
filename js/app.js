@@ -5,9 +5,10 @@ var defaultMarkIcon;
 var selectedMarkIcon;
 
 function fetchFsData(FsId) {
+  // TODO implement error message if loading fails
   data = $.ajax({url: "https://api.foursquare.com/v2/venues/" + FsId,
-               data: {client_id:'I0T4VBKSDZU5F1HYLGWH1OTTWAYSZHHNO0SZJQK04BFFJHDD',
-                client_secret:'0N5F3IQXHCBDVSOGK5T3CWYFKQ0TCV5QJX4VESVHJ5NLVDFH',
+               data: {client_id:'',
+                client_secret:'',
                 v:20170101},
                 success: function(result) {
                   console.log('Query complete');
@@ -62,8 +63,8 @@ function clearMap() {
 
 function showAttraction(venueData) {
   // Code adapted from GoogleMaps API Udacity Course
-  defaultMarkIcon = makeMarkerIcon('0091ff')
-  selectedMarkIcon = makeMarkerIcon('FFFF24');
+  defaultMarkIcon = makeMarkerIcon('ff0000')
+  selectedMarkIcon = makeMarkerIcon('3333ff');
 
   var marker = new google.maps.Marker({
     position: {lat: venueData.location.lat, lng: venueData.location.lng},
@@ -81,17 +82,22 @@ function showAttraction(venueData) {
 
   marker.addListener('click', function() {
     showInfoWindow(this, largeInfowindow);
-  });
-  marker.addListener('mouseover', function() {
     this.setIcon(selectedMarkIcon);
   });
   marker.setMap(map);
   markers.push(marker);
 }
 
+function resetMarkerIcons(){
+  for (i = 0; i < markers.length; i++){
+    markers[i].setIcon(defaultMarkIcon);
+  }
+}
+
 function showInfoWindow(marker, infowindow) {
 
   if (infowindow.marker != marker){
+    resetMarkerIcons();
     var windowContent = '<strong>' + marker.title + '</strong>';
     windowContent += '<div>' + marker.venueAddress + '<div>';
     windowContent += '<div>' + marker.venuePhone + '</div>';
@@ -101,6 +107,7 @@ function showInfoWindow(marker, infowindow) {
     infowindow.setContent(windowContent);
     infowindow.open(map, marker);
     infowindow.addListener('closeclick', function() {
+      resetMarkerIcons();
       infowindow.marker = null;
     });
   }
