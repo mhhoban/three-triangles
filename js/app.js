@@ -5,7 +5,8 @@ var defaultMarkIcon;
 var selectedMarkIcon;
 
 function fetchFsData(FsId) {
-  // TODO implement error message if loading fails
+  // Timeout erroring adapted from http://stackoverflow.com/questions/17156332/jquery-ajax-how-to-handle-timeouts-best
+
   data = $.ajax({url: "https://api.foursquare.com/v2/venues/" + FsId,
                data: {client_id:'',
                 client_secret:'',
@@ -38,6 +39,8 @@ function venueCategory(name) {
 }
 
 function makeMarkerIcon(markerColor) {
+  // Code from GoogleMaps API Udacity Course
+
   var markerImage = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
     '|40|_|%E2%80%A2',
@@ -50,7 +53,6 @@ function makeMarkerIcon(markerColor) {
 
 function initMap() {
   // Code adapted from GoogleMaps API Udacity Course
-  // Constructor creates a new map
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 37.811437, lng: -122.266787},
     zoom: 16
@@ -67,6 +69,8 @@ function clearMap() {
 
 function showAttraction(venueData) {
   // Code adapted from GoogleMaps API Udacity Course
+  var bounds = new google.maps.LatLngBounds();
+
   defaultMarkIcon = makeMarkerIcon('ff0000')
   selectedMarkIcon = makeMarkerIcon('3333ff');
 
@@ -83,6 +87,9 @@ function showAttraction(venueData) {
     venuePhone: venueData.contact.formattedPhone,
     animation: google.maps.Animation.DROP,
   });
+
+  bounds.extend(marker.position);
+  map.fitBounds(bounds)
 
   marker.addListener('click', function() {
     showInfoWindow(this, largeInfowindow);
@@ -173,7 +180,6 @@ function appViewModel() {
         }
       }
     }
-
 
   }
 
