@@ -1,9 +1,9 @@
-var map;
-var largeInfowindow;
-var markers = [];
-var defaultMarkIcon;
-var selectedMarkIcon;
-var bounds;
+var map,
+    largeInfowindow,
+    markers = [],
+    defaultMarkIcon,
+    selectedMarkIcon,
+    bounds;
 
 function fetchFsData(FsId) {
   // Timeout erroring adapted from http://stackoverflow.com/questions/17156332/jquery-ajax-how-to-handle-timeouts-best
