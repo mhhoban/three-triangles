@@ -129,8 +129,9 @@ function showMarker(id) {
 function showInfoWindow(marker, infowindow) {
 
   if(markerVenueDict[marker.FsId][1]){
-
+    // display venue info if it has been fetched through the FourSquare API
     if (infowindow.marker != marker){
+      map.panTo(marker.getPosition())
       venueData = markerVenueDict[marker.FsId][1];
       resetIcons();
 
@@ -156,7 +157,7 @@ function showInfoWindow(marker, infowindow) {
   }
 
   else {
-    //grab FourSquare data if venue is being clicked on for first time
+    // grab FourSquare data if venue is being clicked on for first time
     fetchFsData(marker.FsId);
   }
 
