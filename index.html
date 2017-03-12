@@ -2,68 +2,75 @@
 <html>
 
   <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
     <link type="text/css" rel="stylesheet" href="css/three_triangles_style.css">
-
+    <title> ThreeTriangles </title>
   </head>
 
   <body>
 
+
     <div class="container-fluid">
+      <header>
+        <div class="row">
 
-      <div class="row">
+          <div class="heading">
 
-        <div class="heading">
+            <div class="col-md-12">
 
-          <div class="col-md-12">
+              <h1> ThreeTriangles </h1>
 
-            <h1> ThreeTriangles </h1>
+              <div id="subheading"><h3>Explore Oakland Venues</h3></div>
 
-            <h3><div id="subheading">Explore Oakland Venues</div></h3>
+            </div>
 
           </div>
 
         </div>
-
-      </div>
+      </header>
 
       <div class="row">
 
-        <div class="col-md-4">
+        <aside>
+          <div class="col-md-4">
 
-          <p> Venue Category: </p>
-          <select data-bind="options: categoryPool,
-                             optionsText: 'name',
-                             value: selectedCategory,
-                             optionsCaption: 'Choose a Venue Category'">
+            <p> Venue Category: </p>
+            <select data-bind="options: categoryPool,
+                               optionsText: 'name',
+                               value: selectedCategory,
+                               optionsCaption: 'Choose a Venue Category'">
 
-          </select>
+            </select>
 
-          <ul data-bind="foreach: attractions">
+            <ul data-bind="foreach: attractions">
 
-            <li data-bind="text: name,
-                           click: $root.venueClicked"></li>
+              <li data-bind="text: name,
+                             click: $root.venueClicked"></li>
 
-          </ul>
+            </ul>
 
-        </div>
+          </div>
+        </aside>
 
-        <div class="col-md-8">
+        <main>
+          <div class="col-md-8">
 
-          <div id="map"></div>
+            <div id="map"></div>
 
-          <script async defer
+            <script async defer
 
-              src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRfp9DaclgAiiKsiNBr2Ue81tfOCf_1t4&v=3&callback=initMap&onerror=apiError">
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRfp9DaclgAiiKsiNBr2Ue81tfOCf_1t4&v=3&callback=initMap&onerror=apiError">
 
-          </script>
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-          <script type='text/javascript' src='js/knockout-3.4.1.js'></script>
-          <script src="js/app.js"></script>
+            </script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+            <script type='text/javascript' src='js/knockout-3.4.1.js'></script>
+            <script src="js/app.js"></script>
 
-        </div>
+          </div>
+        </main>
 
       </div>
 
