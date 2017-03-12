@@ -14,8 +14,7 @@ function fetchFsData(FsId) {
                 v:20170101},
                 timeout: 2000,
                 success: function(result) {
-                  console.log('Query complete');
-                  console.log(result.response);
+                  console.log('FS Ajax Request Complete');
                   showAttraction(result.response.venue);
                 },
                 error: function(){
@@ -155,13 +154,10 @@ function appViewModel() {
   self.attractions = ko.observableArray();
 
   self.selectedCategory.subscribe(function(_selection){
-    console.log('switching');
-    console.log(_selection.name);
     self.switchCategory(_selection.name);
   })
 
   self.switchCategory = function(newCategory){
-    console.log('switchCategory func engaged');
     clearMap();
     self.attractions.removeAll();
 
