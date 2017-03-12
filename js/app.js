@@ -15,7 +15,7 @@ function fetchFsData(FsId) {
                 timeout: 2000,
                 success: function(result) {
                   console.log('FS Ajax Request Complete');
-                  addAttractionSite(result.response.venue, FsId);
+                  addAttractionData(result.response.venue, FsId);
                 },
                 error: function(){
                   apiError();
@@ -70,31 +70,44 @@ function initMap() {
 }
 
 function clearMap() {
-  for (mark in markerVenueDict){
-    markerVenueDict[mark].setMap(null);
+  for (site in markerVenueDict){
+    if (site){
+      markerVenueDict[site][0].setMap(null);
+    }
   }
 }
 
 function resetIcons(){
-  for (mark in markerVenueDict){
-    markerVenueDict[mark].setIcon(defaultMarkIcon);
+  for (site in markerVenueDict){
+    markerVenueDict[site][0].setIcon(defaultMarkIcon);
   }
 }
 
-function addAttractionSite(venueData, FsId) {
+// function addAttractionSite(venueData, FsId) {
+//   // Code adapted from GoogleMaps API Udacity Course
+//
+//   var marker = new google.maps.Marker({
+//     position: {lat: venueData.location.lat, lng: venueData.location.lng},
+//     title: venueData.name,
+//     icon: defaultMarkIcon,
+//     venueImage: venueData.bestPhoto.prefix +
+//                 '100' +
+//                 'x' +
+//                 '100' +
+//                 venueData.bestPhoto.suffix,
+//     venueAddress: venueData.location.address,
+//     venuePhone: venueData.contact.formattedPhone,
+//     animation: google.maps.Animation.DROP,
+//   });
+
+function addAttractionSite(site) {
   // Code adapted from GoogleMaps API Udacity Course
 
   var marker = new google.maps.Marker({
-    position: {lat: venueData.location.lat, lng: venueData.location.lng},
-    title: venueData.name,
+    position: {lat: site.lat, lng: site.lng},
+    title: site.name,
     icon: defaultMarkIcon,
-    venueImage: venueData.bestPhoto.prefix +
-                '100' +
-                'x' +
-                '100' +
-                venueData.bestPhoto.suffix,
-    venueAddress: venueData.location.address,
-    venuePhone: venueData.contact.formattedPhone,
+    FsId: site.FsId,
     animation: google.maps.Animation.DROP,
   });
 
@@ -103,38 +116,69 @@ function addAttractionSite(venueData, FsId) {
   });
   marker.setMap(null);
 
-  markerVenueDict[FsId] = marker;
+  markerVenueDict[site.FsId] = [];
+  markerVenueDict[site.FsId].push(marker);
+
+  console.log(markerVenueDict);
+}
+
+function addAttractionData(venueData, FsId){
+  // add the fetched data
+  markerVenueDict[FsId].push({title: venueData.name,
+                              venueImage: venueData.bestPhoto.prefix +
+                                              '100' +
+                                              'x' +
+                                              '100' +
+                                              venueData.bestPhoto.suffix,
+                              venueAddress: venueData.location.address,
+                              venuePhone: venueData.contact.formattedPhone});
+  //call the show info window field again now that we've added the venue data:
+  showInfoWindow(markerVenueDict[FsId][0], LargeInfoWindow);
+
 }
 
 function showMarker(id) {
-  markerVenueDict[id].setMap(map);
-  bounds.extend(markerVenueDict[id].position);
+  markerVenueDict[id][0].setMap(map);
+  bounds.extend(markerVenueDict[id][0].position);
   map.fitBounds(bounds);
 }
 
 function showInfoWindow(marker, infowindow) {
-  if (infowindow.marker != marker){
-    resetIcons();
 
-    marker.title ? title = marker.title : title = 'No Title Available';
-    marker.venueAddress ? venueAddress = marker.venueAddress : venueAddress = 'No Address Available';
-    marker.venuePhone ? venuePhone = marker.venuePhone : venuePhone = 'No Phone Number Available';
-    marker.venueImage ? venueImage = marker.venueImage : venueImage = 'No Image Available';
+  console.log(marker.keys().length);
 
-    var windowContent = '<strong>' + title + '</strong>';
-    windowContent += '<div>' + venueAddress + '<div>';
-    windowContent += '<div>' + venuePhone + '</div>';
-    windowContent += '<div><img src=' + venueImage + '></div>';
+  if(markerVenueDict[marker.FsId][1]){
 
-    infowindow.marker = marker;
-    marker.setIcon(selectedMarkIcon);
-    infowindow.setContent(windowContent);
-    infowindow.open(map, marker);
-    infowindow.addListener('closeclick', function() {
+    if (infowindow.marker != marker){
+      venueData = markerVenueDict[marker.FsId][1];
       resetIcons();
-      infowindow.marker = null;
-    });
+
+      venueData.title ? title = venueData.title : title = 'No Title Available';
+      venueData.venueAddress ? venueAddress = venueData.venueAddress : venueAddress = 'No Address Available';
+      venueData.venuePhone ? venuePhone = venueData.venuePhone : venuePhone = 'No Phone Number Available';
+      venueData.venueImage ? venueImage = venueData.venueImage : venueImage = 'No Image Available';
+
+      var windowContent = '<strong>' + title + '</strong>';
+      windowContent += '<div>' + venueAddress + '<div>';
+      windowContent += '<div>' + venuePhone + '</div>';
+      windowContent += '<div><img src=' + venueImage + '></div>';
+
+      infowindow.marker = marker;
+      marker.setIcon(selectedMarkIcon);
+      infowindow.setContent(windowContent);
+      infowindow.open(map, marker);
+      infowindow.addListener('closeclick', function() {
+        resetIcons();
+        infowindow.marker = null;
+      });
+    }
   }
+
+  else {
+    //grab FourSquare data if venue is being clicked on for first time
+    fetchFsData(marker.FsId);
+  }
+
 }
 
 function AppViewModel() {
@@ -153,7 +197,7 @@ function AppViewModel() {
     self.categories.push(self.categoryPool[i]);
   }
 
-  self.selectedCategory = ko.observableArray();
+  self.selectedCategory = ko.observable();
 
   self.attractionPool = [
     new Attraction("Paramount Theatre", "Entertainment", 37.809704, -122.268197, '49f00938f964a52029691fe3'),
@@ -166,7 +210,12 @@ function AppViewModel() {
   self.attractions = ko.observableArray();
 
   for (i = 0; i < self.attractionPool.length; i++){
-    fetchFsData(self.attractionPool[i].FsId);
+    addAttractionSite(self.attractionPool[i]);
+  }
+
+  self.venueClicked = function(venueChoice){
+    console.log('venue click registering');
+    showInfoWindow(markerVenueDict[venueChoice.FsId],LargeInfoWindow)
   }
 
   self.selectedCategory.subscribe(function(_selection){
@@ -174,10 +223,6 @@ function AppViewModel() {
       self.switchCategory(_selection.name);
     }
   });
-
-  self.venueClicked = function(venueChoice){
-    showInfoWindow(markerVenueDict[venueChoice.FsId],LargeInfoWindow)
-  }
 
   self.switchCategory = function(newCategory){
     clearMap();
