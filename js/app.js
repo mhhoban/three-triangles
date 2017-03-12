@@ -83,23 +83,6 @@ function resetIcons(){
   }
 }
 
-// function addAttractionSite(venueData, FsId) {
-//   // Code adapted from GoogleMaps API Udacity Course
-//
-//   var marker = new google.maps.Marker({
-//     position: {lat: venueData.location.lat, lng: venueData.location.lng},
-//     title: venueData.name,
-//     icon: defaultMarkIcon,
-//     venueImage: venueData.bestPhoto.prefix +
-//                 '100' +
-//                 'x' +
-//                 '100' +
-//                 venueData.bestPhoto.suffix,
-//     venueAddress: venueData.location.address,
-//     venuePhone: venueData.contact.formattedPhone,
-//     animation: google.maps.Animation.DROP,
-//   });
-
 function addAttractionSite(site) {
   // Code adapted from GoogleMaps API Udacity Course
 
@@ -144,8 +127,6 @@ function showMarker(id) {
 }
 
 function showInfoWindow(marker, infowindow) {
-
-  console.log(marker.keys().length);
 
   if(markerVenueDict[marker.FsId][1]){
 
@@ -215,7 +196,7 @@ function AppViewModel() {
 
   self.venueClicked = function(venueChoice){
     console.log('venue click registering');
-    showInfoWindow(markerVenueDict[venueChoice.FsId],LargeInfoWindow)
+    showInfoWindow(markerVenueDict[venueChoice.FsId][0],LargeInfoWindow)
   }
 
   self.selectedCategory.subscribe(function(_selection){
