@@ -16,8 +16,25 @@
 
       <div class="row">
 
+        <div class="heading">
+
+          <div class="col-md-12">
+
+            <h1> Three Triangles </h1>
+
+            <h3><div id="subheading">Explore Oakland Venues</div></h3>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="row">
+
         <div class="col-md-4">
 
+          <p> Venue Category: </p>
           <select data-bind="options: categoryPool,
                              optionsText: 'name',
                              value: selectedCategory">
@@ -40,7 +57,8 @@
 
           <script src="js/app.js"></script>
           <script async defer
-              src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRfp9DaclgAiiKsiNBr2Ue81tfOCf_1t4&v=3&callback=initMap">
+          
+              src="https://maps.googleapis.com/maps/api/js?key={api-key}&v=3&callback=initMap">
 
           </script>
 

@@ -9,10 +9,10 @@ function fetchFsData(FsId) {
   // Timeout erroring adapted from http://stackoverflow.com/questions/17156332/jquery-ajax-how-to-handle-timeouts-best
 
   data = $.ajax({url: "https://api.foursquare.com/v2/venues/" + FsId,
-               data: {client_id:'',
-                client_secret:'',
+               data: {client_id:'{foursquare client_id}',
+                client_secret:'{foursquare client_secret}',
                 v:20170101},
-                timeout: 600,
+                timeout: 2000,
                 success: function(result) {
                   console.log('Query complete');
                   console.log(result.response);

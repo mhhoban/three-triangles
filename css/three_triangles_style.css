@@ -8,3 +8,11 @@ body {
 #map {
   height: 50vw;
 }
+
+.heading{
+  font-weight: bold;
+}
+
+#subheading {
+  font-weight: lighter;
+}
