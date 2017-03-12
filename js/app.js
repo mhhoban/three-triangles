@@ -18,7 +18,7 @@ function fetchFsData(FsId) {
                   showAttraction(result.response.venue);
                 },
                 error: function(){
-                  alert("An error has occurred. Please try reloading the page. If the error persists, please try back again later.")
+                  alert("An error has occurred. Please try reloading the page. If the error persists, please try back again later.");
                 }
               });
 }
@@ -71,7 +71,7 @@ function clearMap() {
 function showAttraction(venueData) {
   // Code adapted from GoogleMaps API Udacity Course
 
-  defaultMarkIcon = makeMarkerIcon('ff0000')
+  defaultMarkIcon = makeMarkerIcon('ff0000');
   selectedMarkIcon = makeMarkerIcon('3333ff');
 
   var marker = new google.maps.Marker({
@@ -89,7 +89,7 @@ function showAttraction(venueData) {
   });
 
   bounds.extend(marker.position);
-  map.fitBounds(bounds)
+  map.fitBounds(bounds);
 
   marker.addListener('click', function() {
     showInfoWindow(this, largeInfowindow);
@@ -155,7 +155,7 @@ function appViewModel() {
 
   self.selectedCategory.subscribe(function(_selection){
     self.switchCategory(_selection.name);
-  })
+  });
 
   self.switchCategory = function(newCategory){
     clearMap();
@@ -178,7 +178,7 @@ function appViewModel() {
       }
     }
 
-  }
+  };
 
 }
 
