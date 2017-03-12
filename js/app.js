@@ -3,11 +3,12 @@ var map,
     markers = [],
     defaultMarkIcon,
     selectedMarkIcon,
+    markerVenueDict = {},
     bounds;
 
 function fetchFsData(FsId) {
   // Timeout erroring adapted from http://stackoverflow.com/questions/17156332/jquery-ajax-how-to-handle-timeouts-best
-
+  console.log('fetchFsData requesting');
   data = $.ajax({url: "https://api.foursquare.com/v2/venues/" + FsId,
                data: {client_id:'I0T4VBKSDZU5F1HYLGWH1OTTWAYSZHHNO0SZJQK04BFFJHDD',
                 client_secret:'2JNZY1MCFOJWG33ZTMYZJBJJUPVM2TUMLQZLMIPBO44NUOCI',
@@ -15,7 +16,7 @@ function fetchFsData(FsId) {
                 timeout: 2000,
                 success: function(result) {
                   console.log('FS Ajax Request Complete');
-                  showAttraction(result.response.venue);
+                  addAttractionSite(result.response.venue, FsId);
                 },
                 error: function(){
                   apiError();
@@ -57,6 +58,10 @@ function makeMarkerIcon(markerColor) {
 
 function initMap() {
   // Code adapted from GoogleMaps API Udacity Course
+  console.log('initMap started');
+
+  defaultMarkIcon = makeMarkerIcon('ff0000');
+  selectedMarkIcon = makeMarkerIcon('3333ff');
   bounds = new google.maps.LatLngBounds();
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 37.811437, lng: -122.266787},
@@ -64,19 +69,25 @@ function initMap() {
   });
 
   largeInfowindow = new google.maps.InfoWindow();
+  ko.applyBindings(new appViewModel());
 }
 
 function clearMap() {
-  for (i = 0; i < markers.length; i++){
-    markers[i].setMap(null);
+  for (mark in markerVenueDict){
+    console.log(mark);
+    markerVenueDict[mark].setMap(null);
   }
 }
 
-function showAttraction(venueData) {
-  // Code adapted from GoogleMaps API Udacity Course
+function resetIcons(){
+  for (mark in markerVenueDict){
+    console.log(mark);
+    markerVenueDict[mark].setIcon(defaultMarkIcon);
+  }
+}
 
-  defaultMarkIcon = makeMarkerIcon('ff0000');
-  selectedMarkIcon = makeMarkerIcon('3333ff');
+function addAttractionSite(venueData, FsId) {
+  // Code adapted from GoogleMaps API Udacity Course
 
   var marker = new google.maps.Marker({
     position: {lat: venueData.location.lat, lng: venueData.location.lng},
@@ -99,20 +110,22 @@ function showAttraction(venueData) {
     showInfoWindow(this, largeInfowindow);
     this.setIcon(selectedMarkIcon);
   });
-  marker.setMap(map);
-  markers.push(marker);
+  marker.setMap(null);
+
+  markerVenueDict[FsId] = marker;
 }
 
-function resetMarkerIcons(){
-  for (i = 0; i < markers.length; i++){
-    markers[i].setIcon(defaultMarkIcon);
-  }
+function showMarker(id) {
+  console.log(id);
+  console.log(typeof(id));
+  markerVenueDict[id].setMap(map);
+
 }
 
 function showInfoWindow(marker, infowindow) {
 
   if (infowindow.marker != marker){
-    resetMarkerIcons();
+    resetIcons();
     var windowContent = '<strong>' + marker.title + '</strong>';
     windowContent += '<div>' + marker.venueAddress + '<div>';
     windowContent += '<div>' + marker.venuePhone + '</div>';
@@ -122,7 +135,7 @@ function showInfoWindow(marker, infowindow) {
     infowindow.setContent(windowContent);
     infowindow.open(map, marker);
     infowindow.addListener('closeclick', function() {
-      resetMarkerIcons();
+      resetIcons();
       infowindow.marker = null;
     });
   }
@@ -130,6 +143,7 @@ function showInfoWindow(marker, infowindow) {
 }
 
 function appViewModel() {
+  console.log('appViewModel executing');
   var self = this;
 
   self.categoryPool = [
@@ -157,18 +171,26 @@ function appViewModel() {
 
   self.attractions = ko.observableArray();
 
+  for (i = 0; i < self.attractionPool.length; i++){
+    self.attractions.push(self.attractionPool[i]);
+    fetchFsData(self.attractionPool[i].FsId);
+  }
+
   self.selectedCategory.subscribe(function(_selection){
-    self.switchCategory(_selection.name);
+    console.log(_selection);
+    if (_selection != undefined){
+      self.switchCategory(_selection.name);
+    }
   });
 
   self.switchCategory = function(newCategory){
-    clearMap();
+    resetIcons();
     self.attractions.removeAll();
 
     if (newCategory == 'All'){
       for (i = 0; i < self.attractionPool.length; i++){
         self.attractions.push(self.attractionPool[i]);
-        fetchFsData(self.attractionPool[i].FsId);
+        showMarker(self.attractionPool[i].FsId);
       }
     }
 
@@ -177,7 +199,7 @@ function appViewModel() {
       for (i = 0; i < self.attractionPool.length; i++){
         if (self.attractionPool[i].category == newCategory){
           self.attractions.push(self.attractionPool[i]);
-          fetchFsData(self.attractionPool[i].FsId);
+          showMarker(self.attractionPool[i].FsId);
         }
       }
     }
@@ -185,5 +207,3 @@ function appViewModel() {
   };
 
 }
-
-ko.applyBindings(new appViewModel());

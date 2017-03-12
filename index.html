@@ -3,8 +3,7 @@
 
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type='text/javascript' src='js/knockout-3.4.1.js'></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
     <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
     <link type="text/css" rel="stylesheet" href="css/three_triangles_style.css">
 
@@ -37,7 +36,8 @@
           <p> Venue Category: </p>
           <select data-bind="options: categoryPool,
                              optionsText: 'name',
-                             value: selectedCategory">
+                             value: selectedCategory,
+                             optionsCaption: 'Choose a Venue Category'">
 
 
           </select>
@@ -55,12 +55,15 @@
 
           <div id="map"></div>
 
-          <script src="js/app.js"></script>
           <script async defer
 
               src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRfp9DaclgAiiKsiNBr2Ue81tfOCf_1t4&v=3&callback=initMap&onerror=apiError">
 
           </script>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+          <script type='text/javascript' src='js/knockout-3.4.1.js'></script>
+          <script src="js/app.js"></script>
+
 
         </div>
 
