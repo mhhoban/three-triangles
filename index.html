@@ -39,13 +39,12 @@
                              value: selectedCategory,
                              optionsCaption: 'Choose a Venue Category'">
 
-
           </select>
 
           <ul data-bind="foreach: attractions">
 
             <li data-bind="text: name,
-                           click: $root.loadMarker"></li>
+                           click: $root.venueClicked"></li>
 
           </ul>
 

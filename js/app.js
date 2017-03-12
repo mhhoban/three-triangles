@@ -103,12 +103,12 @@ function addAttractionSite(venueData, FsId) {
     animation: google.maps.Animation.DROP,
   });
 
-  bounds.extend(marker.position);
-  map.fitBounds(bounds);
+  // bounds.extend(marker.position);
+  // map.fitBounds(bounds);
 
   marker.addListener('click', function() {
     showInfoWindow(this, largeInfowindow);
-    this.setIcon(selectedMarkIcon);
+    //this.setIcon(selectedMarkIcon);
   });
   marker.setMap(null);
 
@@ -119,6 +119,8 @@ function showMarker(id) {
   console.log(id);
   console.log(typeof(id));
   markerVenueDict[id].setMap(map);
+  bounds.extend(markerVenueDict[id].position);
+  map.fitBounds(bounds);
 
 }
 
@@ -132,6 +134,7 @@ function showInfoWindow(marker, infowindow) {
     windowContent += '<div><img src=' + marker.venueImage + '></div>';
 
     infowindow.marker = marker;
+    marker.setIcon(selectedMarkIcon);
     infowindow.setContent(windowContent);
     infowindow.open(map, marker);
     infowindow.addListener('closeclick', function() {
@@ -183,8 +186,13 @@ function appViewModel() {
     }
   });
 
+  self.venueClicked = function(venueChoice){
+    //markerVenueDict[venueChoice.FsId].setIcon(selectedMarkIcon);
+    showInfoWindow(markerVenueDict[venueChoice.FsId],largeInfowindow)
+  }
+
   self.switchCategory = function(newCategory){
-    resetIcons();
+    clearMap();
     self.attractions.removeAll();
 
     if (newCategory == 'All'){
