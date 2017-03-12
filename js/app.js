@@ -18,9 +18,13 @@ function fetchFsData(FsId) {
                   showAttraction(result.response.venue);
                 },
                 error: function(){
-                  alert("An error has occurred. Please try reloading the page. If the error persists, please try back again later.");
+                  apiError();
                 }
               });
+}
+
+function apiError() {
+  alert("An error has occurred. Please try reloading the page. If the error persists, please try back again later.");
 }
 
 function attraction(name, category, lat, lng, FsId) {
