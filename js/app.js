@@ -1,6 +1,5 @@
 var map,
-    largeInfowindow,
-    markers = [],
+    LargeInfoWindow,
     defaultMarkIcon,
     selectedMarkIcon,
     markerVenueDict = {},
@@ -28,7 +27,7 @@ function apiError() {
   alert("An error has occurred. Please try reloading the page. If the error persists, please try back again later.");
 }
 
-function attraction(name, category, lat, lng, FsId) {
+function Attraction(name, category, lat, lng, FsId) {
   var self = this;
   self.name = name;
   self.category = category;
@@ -38,7 +37,7 @@ function attraction(name, category, lat, lng, FsId) {
 
 }
 
-function venueCategory(name) {
+function VenueCategory(name) {
   var self = this;
   self.name = name;
 }
@@ -66,8 +65,8 @@ function initMap() {
     zoom: 15
   });
 
-  largeInfowindow = new google.maps.InfoWindow();
-  ko.applyBindings(new appViewModel());
+  LargeInfoWindow = new google.maps.InfoWindow();
+  ko.applyBindings(new AppViewModel());
 }
 
 function clearMap() {
@@ -100,7 +99,7 @@ function addAttractionSite(venueData, FsId) {
   });
 
   marker.addListener('click', function() {
-    showInfoWindow(this, largeInfowindow);
+    showInfoWindow(this, LargeInfoWindow);
   });
   marker.setMap(null);
 
@@ -132,14 +131,14 @@ function showInfoWindow(marker, infowindow) {
   }
 }
 
-function appViewModel() {
+function AppViewModel() {
   var self = this;
 
   self.categoryPool = [
-    new venueCategory("All"),
-    new venueCategory("Entertainment"),
-    new venueCategory("Food"),
-    new venueCategory("Bar")
+    new VenueCategory("All"),
+    new VenueCategory("Entertainment"),
+    new VenueCategory("Food"),
+    new VenueCategory("Bar")
   ];
 
   self.categories = ko.observableArray();
@@ -151,11 +150,11 @@ function appViewModel() {
   self.selectedCategory = ko.observableArray();
 
   self.attractionPool = [
-    new attraction("Paramount Theatre", "Entertainment", 37.809704, -122.268197, '49f00938f964a52029691fe3'),
-    new attraction("Drake's Dealership", "Bar", 37.812621, -122.266326, '55a6eee8498e39b5dd60f45a'),
-    new attraction("Burrito Express", "Food", 37.814114, -122.268600, '505d1ad6e4b0e43317e6a416'),
-    new attraction("The New Parkway Theater", "Entertainment", 37.813787, -122.267439, '4f2c9d97e4b010c5f4f9ec08'),
-    new attraction("The Double Standard", "Bar", 37.814274, -122.268234, '54c488ab498ed093fab467a3')
+    new Attraction("Paramount Theatre", "Entertainment", 37.809704, -122.268197, '49f00938f964a52029691fe3'),
+    new Attraction("Drake's Dealership", "Bar", 37.812621, -122.266326, '55a6eee8498e39b5dd60f45a'),
+    new Attraction("Burrito Express", "Food", 37.814114, -122.268600, '505d1ad6e4b0e43317e6a416'),
+    new Attraction("The New Parkway Theater", "Entertainment", 37.813787, -122.267439, '4f2c9d97e4b010c5f4f9ec08'),
+    new Attraction("The Double Standard", "Bar", 37.814274, -122.268234, '54c488ab498ed093fab467a3')
   ];
 
   self.attractions = ko.observableArray();
@@ -171,7 +170,7 @@ function appViewModel() {
   });
 
   self.venueClicked = function(venueChoice){
-    showInfoWindow(markerVenueDict[venueChoice.FsId],largeInfowindow)
+    showInfoWindow(markerVenueDict[venueChoice.FsId],LargeInfoWindow)
   }
 
   self.switchCategory = function(newCategory){
