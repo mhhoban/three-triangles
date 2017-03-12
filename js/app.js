@@ -115,10 +115,16 @@ function showMarker(id) {
 function showInfoWindow(marker, infowindow) {
   if (infowindow.marker != marker){
     resetIcons();
-    var windowContent = '<strong>' + marker.title + '</strong>';
-    windowContent += '<div>' + marker.venueAddress + '<div>';
-    windowContent += '<div>' + marker.venuePhone + '</div>';
-    windowContent += '<div><img src=' + marker.venueImage + '></div>';
+
+    marker.title ? title = marker.title : title = 'No Title Available';
+    marker.venueAddress ? venueAddress = marker.venueAddress : venueAddress = 'No Address Available';
+    marker.venuePhone ? venuePhone = marker.venuePhone : venuePhone = 'No Phone Number Available';
+    marker.venueImage ? venueImage = marker.venueImage : venueImage = 'No Image Available';
+
+    var windowContent = '<strong>' + title + '</strong>';
+    windowContent += '<div>' + venueAddress + '<div>';
+    windowContent += '<div>' + venuePhone + '</div>';
+    windowContent += '<div><img src=' + venueImage + '></div>';
 
     infowindow.marker = marker;
     marker.setIcon(selectedMarkIcon);
