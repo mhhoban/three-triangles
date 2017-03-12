@@ -58,8 +58,6 @@ function makeMarkerIcon(markerColor) {
 
 function initMap() {
   // Code adapted from GoogleMaps API Udacity Course
-  console.log('initMap started');
-
   defaultMarkIcon = makeMarkerIcon('ff0000');
   selectedMarkIcon = makeMarkerIcon('3333ff');
   bounds = new google.maps.LatLngBounds();
@@ -74,14 +72,12 @@ function initMap() {
 
 function clearMap() {
   for (mark in markerVenueDict){
-    console.log(mark);
     markerVenueDict[mark].setMap(null);
   }
 }
 
 function resetIcons(){
   for (mark in markerVenueDict){
-    console.log(mark);
     markerVenueDict[mark].setIcon(defaultMarkIcon);
   }
 }
@@ -103,12 +99,8 @@ function addAttractionSite(venueData, FsId) {
     animation: google.maps.Animation.DROP,
   });
 
-  // bounds.extend(marker.position);
-  // map.fitBounds(bounds);
-
   marker.addListener('click', function() {
     showInfoWindow(this, largeInfowindow);
-    //this.setIcon(selectedMarkIcon);
   });
   marker.setMap(null);
 
@@ -116,16 +108,12 @@ function addAttractionSite(venueData, FsId) {
 }
 
 function showMarker(id) {
-  console.log(id);
-  console.log(typeof(id));
   markerVenueDict[id].setMap(map);
   bounds.extend(markerVenueDict[id].position);
   map.fitBounds(bounds);
-
 }
 
 function showInfoWindow(marker, infowindow) {
-
   if (infowindow.marker != marker){
     resetIcons();
     var windowContent = '<strong>' + marker.title + '</strong>';
@@ -142,11 +130,9 @@ function showInfoWindow(marker, infowindow) {
       infowindow.marker = null;
     });
   }
-
 }
 
 function appViewModel() {
-  console.log('appViewModel executing');
   var self = this;
 
   self.categoryPool = [
@@ -175,19 +161,16 @@ function appViewModel() {
   self.attractions = ko.observableArray();
 
   for (i = 0; i < self.attractionPool.length; i++){
-    self.attractions.push(self.attractionPool[i]);
     fetchFsData(self.attractionPool[i].FsId);
   }
 
   self.selectedCategory.subscribe(function(_selection){
-    console.log(_selection);
     if (_selection != undefined){
       self.switchCategory(_selection.name);
     }
   });
 
   self.venueClicked = function(venueChoice){
-    //markerVenueDict[venueChoice.FsId].setIcon(selectedMarkIcon);
     showInfoWindow(markerVenueDict[venueChoice.FsId],largeInfowindow)
   }
 
@@ -203,7 +186,6 @@ function appViewModel() {
     }
 
     else{
-
       for (i = 0; i < self.attractionPool.length; i++){
         if (self.attractionPool[i].category == newCategory){
           self.attractions.push(self.attractionPool[i]);
